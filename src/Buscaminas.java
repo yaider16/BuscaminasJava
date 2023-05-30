@@ -1,4 +1,4 @@
-import java.util.Random;
+
 
 public class Buscaminas {
 
@@ -18,280 +18,130 @@ public class Buscaminas {
 
     public Casilla[][] tamaño(int dificultad){
 
-        final int FACIL=1;
+        // Establezco las dificultades en las cuales cambia la cantidad de minas a colocar en el mismo espacio
+        // Empieza con la cantidad de 20 y va subiendo la misma cantidad hasta 60
+        final int FACIL=1; 
         final int MEDIA=2;
         final int DIFICIL=3;
 
         int cantidadMinas;
 
+        // Creo el array de casillas que será en donde se guardarán todos los datos
         Casilla[][] matriz = new Casilla[10][10];
 
-        // Este for es para colocar una mina en una posicion random si no llega a haber otro en el mismo lugar 
+        // Este for es para declarar y darle valor al array 
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz.length; j++) {
                 matriz[i][j] = new Casilla();
             }
         }
 
+        // Este switch en base a la dificultad crea las mina y las coloca en las posiciones random
         switch (dificultad) {
             case FACIL:
                 cantidadMinas=20;
-                crearMinas(cantidadMinas, matriz);
+                Casilla.crearMinas(cantidadMinas, matriz);
                 break;
             
             case MEDIA:
                 cantidadMinas=40;
-                crearMinas(cantidadMinas, matriz);
+                Casilla.crearMinas(cantidadMinas, matriz);
                 break;
 
             case DIFICIL:
                 cantidadMinas=60;
-                crearMinas(cantidadMinas, matriz);
+                Casilla.crearMinas(cantidadMinas, matriz);
                 break;
 
             default:
                 break;
         }
 
+
+        // Aqui hago el contador de cuantos hay alrededor de cada posicion que no tiene una mina
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz.length; j++) {
-
                 if(matriz[i][j].getMina()){
 
-                }else if(hayAlrededor(i,j, matriz)){
-
-                    String cuantos = Integer.toString(cuantosAlrededor(i,j, matriz));
-                    
-                    matriz[i][j].setValor(cuantos);
-
                 }else{
-                    matriz[i][j].setValor("0");
+                    // Uso la funcion que me pregunta cuantos hay alrededor y en base a eso le coloca la cantidad que tendira este
+                    String cuantos = Integer.toString(cuantosAlrededor(i,j, matriz));
+                    matriz[i][j].setValor(cuantos);
                 }
             }
         }
+        // Retorno la matriz ya completa para su uso
+        return matriz;
+    }
+    
+    public static Casilla[][] imprimir2(Casilla[][] matriz){
+
+        for (int j = 0; j < matriz.length; j++) {
+            for (int j2 = 0; j2 < matriz.length; j2++) {
+                
+                if (j2==matriz.length-1) {
+                    System.out.print(matriz[j][j2].getValorFalso()+"\n");
+                }else{
+                    System.out.print(matriz[j][j2].getValorFalso()+" ");
+                }
+            }
+        }
+
         return matriz;
     }
 
+    // Esta funcion recibe la posicion y la matriz de donde se saca para evaluar cuantas mina tiene alrededor
+    public int cuantosAlrededor(int i, int j,Casilla[][] matriz){
 
-    public Casilla[][] crearMinas(int cantidadMinas, Casilla[][] casillas){
-
-        Random random = new Random();
-
-        for (int i = 0; i < cantidadMinas; i++) {
-            
-            int pos1= random.nextInt(10);
-            int pos2= random.nextInt(10);
-
-
-
-            casillas[pos1][pos2].setMina(true);
-        }
-
-        return casillas;
-    }
-    
-
-    public int cuantosAlrededor(int fila, int columna,Casilla[][] matriz){
-
+        // establezco el contador que me dira cuantas minas tiene alrededor iniciando este en 0
         int contador = 0;
-        int i = fila;
-        int j= columna;
 
-        boolean esquinaSuperiorDerecha=false;
-        boolean esquinaSuperiorIzquierda=false;
-        boolean esquinaInferiorDerecha=false;
-        boolean esquinaInferiorIzquierda=false;
-        boolean lateralIzquierdo=false;
-        boolean lateralDerecho=false;
-        boolean limiteSuperior = false;
-        boolean limiteInferior=false;
-        boolean centro = false;
+        /* 
+        En este for me encargo de recorrer cada uno de los espacios alrededor de el punto deseado
+        Uso un if que determina si el espacio a evaluar está dentro de los limites
+        Si el espacio está dentro de los limites entonces evaluo si tiene mina
+        Si llega a tener mina al contador le sumo 1 
+        */
 
-
-        if (i==0 && j==matriz.length-1) {
-            esquinaSuperiorDerecha = matriz[i][j-1].getMina() || matriz[i+1][j].getMina() || matriz[i+1][j-1].getMina();            
-        }
-
-        else if( i==0  && j ==0){
-            esquinaSuperiorIzquierda = matriz[i][j+1].getMina() || matriz[i+1][j].getMina() || matriz[i+1][j+1].getMina();
-        }
-
-        else if(i==matriz.length-1 && j==matriz.length-1){
-            esquinaInferiorDerecha = matriz[i-1][j].getMina() || matriz[i][j-1].getMina() || matriz[i-1][j+1].getMina();
-        }
-
-        else if(i==matriz.length-1 && j==0){
-            esquinaInferiorIzquierda = matriz[i-1][j].getMina() || matriz[i][j+1].getMina() || matriz[i-1][j-1].getMina();
-        }
-
-        else if(i>0 && i<matriz.length-1 && j==0){
-            lateralIzquierdo = matriz[i-1][j].getMina() || matriz[i-1][j+1].getMina() || matriz[i][j+1].getMina() || matriz[i+1][j+1].getMina() || matriz[i+1][j].getMina();
-        }
-        
-        else if(i>0 && i<matriz.length-1 && j==matriz.length-1){
-            lateralDerecho  = matriz[i-1][j].getMina() || matriz[i-1][j-1].getMina() || matriz[i][j-1].getMina() || matriz[i-1][j-1].getMina() || matriz[i-1][j].getMina();
-        }
-
-        else if(i==0 && j>0 && j<matriz.length-1){
-            limiteSuperior = matriz[i][j-1].getMina() || matriz[i+1][j-1].getMina() || matriz[i+1][j].getMina() || matriz[i+1][j+1].getMina() || matriz[i][j+1].getMina();
-        }
-
-        else if(i==matriz.length-1 && j>0 && j<matriz.length-1){
-            limiteInferior = matriz[i][j-1].getMina() || matriz[i-1][j-1].getMina() || matriz[i-1][j].getMina() || matriz[i-1][j+1].getMina() || matriz[i][j+1].getMina();
-        }
-        else if(i>0 && i<matriz.length-1 && j>0 && j<matriz.length-1){
-            centro = matriz[i-1][j-1].getMina() || matriz[i-1][j].getMina() || matriz[i-1][j+1].getMina() || matriz[i][j-1].getMina() || matriz[i][j+1].getMina() || matriz[i+1][j-1].getMina() || matriz[i+1][j+1].getMina() || matriz[i+1][j].getMina();
-        }
-        
-        if (esquinaSuperiorDerecha && i==0 && j==matriz.length-1){
-
-            for (int k = 0; k < 3; k++) {
-                if (matriz[i][j-1].getMina()) {
-                    contador++;
-                }else if(matriz[i+1][j].getMina()){
-                    contador++;
-                }else if (matriz[i+1][j-1].getMina()) {
-                    contador++;
-                }                    
-            }
-        }
-            
-        else if(esquinaSuperiorIzquierda && i==0  && j ==0){
-            for (int k = 0; k < 3; k++) {
-                if (matriz[i][j+1].getMina()) {
-                    contador++;
-                }else if (matriz[i+1][j].getMina()) {
-                    contador++;
-                }else if(matriz[i+1][j+1].getMina()){
-                    contador++;
-                }                    
-            }
-
-        }
-
-        else if(esquinaInferiorIzquierda && i==matriz.length-1 && j==0){
-            for (int k = 0; k < 3; k++) {
-                if (matriz[i-1][j].getMina()) {
-                    contador++;
-                }else if (matriz[i][j+1].getMina()) {
-                    contador++;
-                }else if(matriz[i-1][j-1].getMina()){
-                    contador++;
-                }                    
-            }
-
-        }
-
-        else if(esquinaInferiorDerecha && i==matriz.length-1 && j==matriz.length-1){
-            for (int k = 0; k < 3; k++) {
-                if (matriz[i-1][j].getMina()) {
-                    contador++;
-                }else if (matriz[i][j-1].getMina()) {
-                    contador++;
-                }else if(matriz[i-1][j-1].getMina()){
-                    contador++;
-                }                    
-            }
-
-        }
-
-        else if(lateralIzquierdo && i>0 && i<matriz.length-1 && j==0){
-            for (int k = 0; k < 5; k++) {
-                if (matriz[i-1][j].getMina()) {
-                    contador++;
-                }else if (matriz[i-1][j+1].getMina()) {
-                    contador++;
-                }else if(matriz[i][j+1].getMina()){
-                    contador++;
-                }else if(matriz[i+1][j+1].getMina()){
-                    contador++;
-                }else if(matriz[i+1][j].getMina()){
-                    contador++;
-                }                    
+        for (int j2 = i-1; j2 <= i+1; j2++) {
+            for (int k = j-1; k <= j+1; k++) {
+                // Verificar que el punto esté dentro de los límites del buscaminas
+                if (j2 >= 0 && j2 < matriz.length && k >= 0 && k < matriz.length) {
+                    if (matriz[j2][k].getMina()) {
+                        contador++;
+                    }
+                }
             }
         }
 
-        else if(lateralDerecho && i>0 && i<matriz.length-1 && j==matriz.length-1){
-            for (int k = 0; k < 5; k++) {
-                if (matriz[i-1][j].getMina()) {
+        // Devuelvo la cantidad de minas encontradas (Si llega a ser cero anteriormente ya se ahabia evaluado de esa forma)
+        return contador;
+    }
+
+    public void ganador(Casilla[][] matriz, int dificultad){
+
+        int contador =0;
+        int comparador=0;
+
+        if (dificultad==1) {
+            comparador=20;
+        }else if(dificultad==2){
+            comparador=40;
+        }else if(dificultad==3){
+            comparador=60;
+        }
+
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz.length; j++) {
+                if (matriz[i][j].getMina() && matriz[i][j].getBandera()) {
                     contador++;
-                }else if (matriz[i-1][j-1].getMina()) {
-                    contador++;
-                }else if(matriz[i][j-1].getMina()){
-                    contador++;
-                }else if(matriz[i-1][j-1].getMina()){
-                    contador++;
-                }else if(matriz[i-1][j].getMina()){
-                    contador++;
-                }                    
+                }
             }
         }
 
-        else if(limiteSuperior && i==0 && j>0 && j<matriz.length-1){
-            for (int k = 0; k < 5; k++) {
-                if (matriz[i][j-1].getMina()) {
-                    contador++;
-                }else if (matriz[i+1][j-1].getMina()) {
-                    contador++;
-                }else if(matriz[i+1][j].getMina()){
-                    contador++;
-                }else if(matriz[i+1][j+1].getMina()){
-                    contador++;
-                }else if(matriz[i][j+1].getMina()){
-                    contador++;
-                }                    
-            }
+        if (contador == comparador) {
+            System.out.println("Felicidades Has Ganado");
         }
-
-        else if(limiteInferior && i==matriz.length-1 && j>0 && j<matriz.length-1){
-            for (int k = 0; k < 5; k++) {
-                if (matriz[i][j-1].getMina()) {
-                    contador++;
-                }else if (matriz[i-1][j-1].getMina()) {
-                    contador++;
-                }else if(matriz[i-1][j].getMina()){
-                    contador++;
-                }else if(matriz[i-1][j+1].getMina()){
-                    contador++;
-                }else if(matriz[i][j+1].getMina()){
-                    contador++;
-                }    
-            }
-        }
-
-        else if(centro && i>0 && i<matriz.length-1 && j>0 && j<matriz.length-1){
-            for (int k = 0; k < 8; k++) {
-                if (matriz[i-1][j-1].getMina()) {
-                    contador++;
-                }else if (matriz[i-1][j].getMina()) {
-                    contador++;
-                }else if(matriz[i-1][j+1].getMina()){
-                    contador++;
-                }else if(matriz[i][j-1].getMina()){
-                    contador++;
-                }else if(matriz[i][j+1].getMina()){
-                    contador++;
-                }else if(matriz[i+1][j-1].getMina()){
-                    contador++;
-                }else if(matriz[i+1][j+1].getMina()){
-                    contador++;
-                }else if(matriz[i+1][j].getMina()){
-                    contador++;
-                }                    
-            }
-        }
-
-            return contador;
-        }
-
-    public boolean hayAlrededor(int fila, int columna, Casilla[][] matriz){
-
-        int contador = cuantosAlrededor(fila, columna, matriz);
-
-        if (contador >0) {
-            return true;
-        }else{
-            return false;
-        } 
     }
 }
