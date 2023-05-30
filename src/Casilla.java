@@ -85,7 +85,7 @@ public class Casilla {
     }
 
     public Casilla[][] revelar(Casilla[][] matriz, int fila, int columna){
-        matriz[fila][columna].setValorFalso(false,false);
+        matriz[fila-1][columna-1].setValorFalso(false,false);
 
         if (this.getMina()) {
             this.imprimirFinal(matriz);
@@ -116,10 +116,10 @@ public class Casilla {
             System.out.println("Está descubierto, no puede hacer eso");
         }else{
             if(bandera){
-                matriz[fila][columna].setValorFalso(false,true);
+                matriz[fila-1][columna-1].setValorFalso(false,true);
                 bandera=false;
             }else{
-                matriz[fila][columna].setValorFalso(true,false);
+                matriz[fila-1][columna-1].setValorFalso(true,false);
                 bandera=true;
             }
 

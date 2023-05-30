@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 public class App {
-
     public static void main(String[] args) throws Exception {
         
         Scanner sc = new Scanner(System.in);
@@ -22,7 +21,9 @@ public class App {
             int seleccion = sc.nextInt();
 
             switch (seleccion) {
+
                 case 1:
+
                     System.out.println("Donde desea colocar/quitar la bandera: ");
                     int fila2 = sc.nextInt();
                     int columna2 = sc.nextInt();
@@ -32,32 +33,28 @@ public class App {
                     break;
     
                 case 2:
+
                     System.out.println("Que posición desea revelar: ");
                     int fila = sc.nextInt();
                     int columna = sc.nextInt();
         
-                    if (casillas[fila][columna].getMina()) {
-        
-                        casillas[fila][columna].revelar(casillas, fila, columna);
+                    if (casillas[fila-1][columna-1].getMina()) {
+                        casillas[fila-1][columna-1].revelar(casillas, fila, columna);
                         System.out.println("Lo siento perdiste <3");
                         sigue = false;
-                    
                     }else{
-                        casillas[fila][columna].revelar(casillas, fila, columna);
+                        casillas[fila-1][columna-1].revelar(casillas, fila, columna);
                     }
                     break;
-
 
                 case 3:
                     System.out.println("Muchas gracias por jugar");
                     sigue = false;
                     break;
+               
                 default:
                     break;
             }
-
-
-
         }
 
 
