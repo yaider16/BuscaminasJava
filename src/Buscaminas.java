@@ -1,21 +1,13 @@
-
+/*
+ * Se podria decir que la clase buscaminas es la encargada de guardar la herramientas para usar en
+ * el array de casillas y asi tener de forma mas organizado todo
+ * Sé que el nombre no es demasiado intuitivo pero fue lo primero que se me ocurrio
+ */
 
 public class Buscaminas {
 
-    public void imprimir(Casilla[][] matriz){
-
-        for (int j = 0; j < matriz.length; j++) {
-            for (int j2 = 0; j2 < matriz.length; j2++) {
-                
-                if (j2==matriz.length-1) {
-                    System.out.print(matriz[j][j2].getValor()+"\n");
-                }else{
-                    System.out.print(matriz[j][j2].getValor()+" ");
-                }
-            }
-        }
-    }
-
+    // Este se podria llamar el constructor ya que se encarga de pedir la dificultad y crear toda la matriz ya 
+    // Ya consus posiciones y sus valores de alrededor
     public Casilla[][] tamaño(int dificultad){
 
         // Establezco las dificultades en las cuales cambia la cantidad de minas a colocar en el mismo espacio
@@ -74,11 +66,12 @@ public class Buscaminas {
         return matriz;
     }
     
-    public static Casilla[][] imprimir2(Casilla[][] matriz){
+    // Este imprimir imprime la parte inicial del array, esto quiere decir cuando aun no estan descubiertas
+    public static Casilla[][] imprimir(Casilla[][] matriz){
 
         for (int j = 0; j < matriz.length; j++) {
             for (int j2 = 0; j2 < matriz.length; j2++) {
-                
+                // Se usa el valor falso porque es donde está guardado el "■" que será la forma encubierta de la casilla
                 if (j2==matriz.length-1) {
                     System.out.print(matriz[j][j2].getValorFalso()+"\n");
                 }else{
@@ -118,11 +111,17 @@ public class Buscaminas {
         return contador;
     }
 
+
+    /*
+     * Esta sera la funcion que se ejecute para cuando ya estan puestas las banderas en todas
+     * y cada una de las minas.
+     */
     public void ganador(Casilla[][] matriz, int dificultad){
 
         int contador =0;
         int comparador=0;
 
+        // Tengo almacenadas las dificultades
         if (dificultad==1) {
             comparador=20;
         }else if(dificultad==2){
@@ -131,7 +130,7 @@ public class Buscaminas {
             comparador=60;
         }
 
-
+        // Comparo cada una de las minas y en caso de tener la bandera puesta sumo uno al contador
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz.length; j++) {
                 if (matriz[i][j].getMina() && matriz[i][j].getBandera()) {
@@ -139,7 +138,10 @@ public class Buscaminas {
                 }
             }
         }
-
+        /*
+         * Ya finalizando si el contador tiene la misma cantidad que el comparador 
+         * significa que ya le puso la bandera a todas las minas y por ende habrá ganado 
+         */
         if (contador == comparador) {
             System.out.println("Felicidades Has Ganado");
         }

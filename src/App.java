@@ -16,7 +16,7 @@ public class App {
 
         while (sigue) {
             
-            Buscaminas.imprimir2(casillas);
+            Buscaminas.imprimir(casillas);
 
             System.out.println("1 para colocar/quitar bandera y 2 para revelar posicion 3 para salir");
             int seleccion = sc.nextInt();
@@ -26,7 +26,7 @@ public class App {
                     System.out.println("Donde desea colocar/quitar la bandera: ");
                     int fila2 = sc.nextInt();
                     int columna2 = sc.nextInt();
-                    casillas[fila2][columna2].bandera(fila2,columna2,casillas);
+                    casillas[fila2-1][columna2-1].bandera(fila2,columna2,casillas);
                     buscaminas.ganador(casillas, dificultad);
                     // Buscaminas.imprimir2(casillas);
                     break;
@@ -36,14 +36,14 @@ public class App {
                     int fila = sc.nextInt();
                     int columna = sc.nextInt();
         
-                    if (casillas[fila][columna].getMina()) {
+                    if (casillas[fila-1][columna-1].getMina()) {
         
-                        casillas[fila][columna].revelar(casillas, fila, columna);
+                        casillas[fila-1][columna-1].revelar(casillas, fila, columna);
                         System.out.println("Lo siento perdiste <3");
                         sigue = false;
                     
                     }else{
-                        casillas[fila][columna].revelar(casillas, fila, columna);
+                        casillas[fila-1][columna-1].revelar(casillas, fila, columna);
                     }
                     break;
 
