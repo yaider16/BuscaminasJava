@@ -92,15 +92,25 @@ public class Casilla {
 
     // Esta funcion se encarga de revelar con las coordenadas las posicion deseada, ya sea mina u otra cosa
     public Casilla[][] revelar(Casilla[][] matriz, int fila, int columna){
+
         // Cambio el valor falso a el valor real y coloco falso en ambos argumentos porque no estoy ni colocando ni quitando bandera
-        matriz[fila-1][columna-1].setValorFalso(false,false);
+        for (int j2 = fila-1; j2 <= fila+1; j2++) {
+            for (int k = columna-1; k <= columna+1; k++) {
+                // Verificar que el punto esté dentro de los límites del buscaminas
+                if (j2 >= 0 && j2 < matriz.length && k >= 0 && k < matriz.length) {
+                    if (!matriz[j2][k].getMina()) {
+                        matriz[j2][k].setValorFalso(false,false);
+                    }
+                }
+            }
+        }
 
         // Si hay una mina en esta posicion imprime todo descubierto
         if (this.getMina()) {
             this.imprimirFinal(matriz);
         }
         // Setea el descubierto a true y devuelve la matriz
-        descubierto =true;
+        this.descubierto =true;
 
         return matriz;
     }
@@ -122,6 +132,7 @@ public class Casilla {
 
     // En esta funcion me encargo de colocar o quitar la bandera en una posicion que esté cubierta
     public Casilla[][] bandera(int fila, int columna, Casilla[][] matriz){
+        
         // Si ya está descubierta pues no dejará al usuario colocar la bandera en esa posicion
         if (descubierto) {
             System.out.println("Está descubierto, no puede hacer eso");
